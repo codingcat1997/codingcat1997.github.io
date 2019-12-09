@@ -1,125 +1,173 @@
+var colorsTimerBox =["#BD5532"," #E1B866"];
+var indexColorsTimerBox = 0;
+const MaxStudyTime = 120;
+const roundToNearest5 = x => Math.round(x/5)*5
+var lock = false;
 
-//Authorization links
-var oAuthUrl="https://accounts.spotify.com/authorize?client_id=059f69ae51c445518b106f91e9ddaf9c&redirect_uri=https://wout97.github.io/index.html&scope=user-read-private%20user-read-email&response_type=token&state=123"
-var dash="https://developer.spotify.com/dashboard/applications/059f69ae51c445518b106f91e9ddaf9c"
-var newToken="https://developer.spotify.com/console/get-playlists/?user_id=wizzler&limit=&offset="
-var url_string = window.location.href;
-var access_token = url_string.match(/\#(?:access_token)\=([\S\s]*?)\&/)[1];
-console.log("test");
-var client_id = getClientId();
+var slider = document.getElementById("myRange");
+var output = document.getElementById("demo");
+var icon1 = document.getElementById("icon1");
+var icon2 = document.getElementById("icon2");
+var icon3 = document.getElementById("icon3");
+var underImage = document.getElementById("underImage");
+var timerSection = document.getElementById("timerSection");
 
-function getClientId(){
-	var response = callSpotifyAPI2("https://api.spotify.com/v1/me");
-	return response.id;
+icon2.style.opacity = "0.5";
+icon3.style.opacity="0.5";
 
-}
+var hoursStudy = 0;
+var minutesStudy = 10;
 
+var url1 ="https://lh3.googleusercontent.com/7Tw_HpOZIrD7wi7CDw3tIft7ytj8NT6VcGLhwR7Kqu-0hdm3ZrZTuRpxMjE3zf0NLxR9KfuDxjcVjB-bQp3jHJuq6QLtVeIVpUMEYRVh7MBjp5LR31_hNXdkvyJd3EZwWJl0CggqxWjzVqkT_Nv7Aew9WVjtPYIEns0Xk29l86zt0d266OP9CsabK0FTxk_fvbL8y1MYXvgve7r98xKCwGckSiRdm832j5_RTjNhT-98XptYkuOG_iyUCowuoHKJ4sPAkJDlrqweQCxW6myFhYe8nUeHqNrJHJzQ_mjAWb2hIGj7pmJJaCfa5uLv1Z1Hf7_BZ_XfC8_voZ1aM-Pi4ADa6ASGzayA-zn1BKKAOitNGjFfIVktKL0FqE3oYmlWIxxrSHBzeVPhjWKehcNyjHSJerwiSy7yoRgUFgyAZ5NATB60zr7layP4eGBKLZA88VRbx-3VeMqwDnjSorEfe3qCNZrBoz6KeJc_htPabq3wPsdfHidDlEyfH1M1OmALR9RLuf8jtUgQfWwZGidS-hKvack0gZPK1tnF760fP9z5330RDzQHdcl54QRiBZ6KBYLqX30lIe1uatxn5HvXSIp9RpgbukSsCRUMIMaN5NUW-xiwxdrNcp846FanJKQHh4hV0u2oRH7jR5iVyuVwST9qShBjEJKk6IkeWmCINGqI-8QJj3RO7de0OT5RtgR9iMlIbulrKdIaSXJPdYMw8UxmLIVP=s500-no";
+var url2 = "https://lh3.googleusercontent.com/QVOdD5x3V4JeGOiGR7YijjDktn5fH8xrXJv3AbYGn9qW1e7M_9eggpcbWkJU7e1n-KF_JdgZF35HeUAWcLN0EhWe4GcnPTNFHZ9Ud5vXN36rv_iZ-jKPD4c6JvE0p3BL5m-wUKMrSy1KfRQOF5XBDa2qY_Stp3coacN3071BwWE9kMRc97AgPUeMyUYmWfA7iLt2hsPdOBpwtHf2OrEayw45hkRWil0IFrixbOMaHOGfvZr9LSuR_SH-M6Ku10RjJLozw2WbhHK0QFFYKm5446i7bT-fzhyWWqUOp09s8ngh4jsj3lfkrJ_5x59ZFiga8yGBOGy0j6xVYZb8CwKvWSUUxtYuI2H0C7MiOFQ2FjntD18xyd7tZBiN-I_OPCHTRAc067qRSQtzbvac8k6TyAOsp2EMQfRjLzUoATDjwcWuRr0YJ4XKL8SFFJEG5J54PfWF6r3eqKijcEdmtWJQTAJgKCxpjYJzRgKEClxv7dR2hk1D6ccMEsgryjlez87hndQrfM5UoLDYTX81ah2nSX1RbRsJ1Wk1pKQM1Zk8JAG6IaZ-OnCiRLpKMUR0DTb3DcmtJSkYpMFcVATEBUy-FROQTrTSMGICFlHLin7eYoDQTQZH13R1nxZ3yiXHmL4yg7g4Hh3iyPuKqS9EeXTPm-fSNsidInDesF07N-AP-_v2ai1VjIyqEAV09BjBhVLr2oqlU0nXogBoo7lL-EpPn51VJ4ASVdcFQaWW0NSt_hQC-sf0gQ=w256-h218-no";
+var url3 = "https://lh3.googleusercontent.com/G2OPrntSfseiF8IcK3UkWXwBG8g1NIjS7F7BRw3fuzKWu6oK4axPvuV_k91Nd8S_ogJ9hJESytqWraP6-JZmS_HmPtHYlgydS0G7Vb394zgI4VrP4RkqDtK8zNKeY8gKvjTnvjj-U0wzvZsA_M1dQ94NgC5A4Ya-vlwGWdt5SZ7nt_AalViU6NE9B_-sKQiIbFfwCHLL_dHx87mhZqBMw_GNxS8TOdtuAKE4jUq4C-G1d-_9leiytTmguTdSrJQ6l6-kYJwoxBsTN4w4wHWXHiRzaVbqYyu1WWBFvd3Uyx_qP4s8wCHHZHowaJDkSJYfjB0Yaj53DVt5CTWHDBW3D10Ii8pVh7XFQI_NkyiWUemDBiRYv5HiijwC-qeLxOAMTW8fjKJ8tf007lryvF3Qj17B0_UWPPwE4VcqrP9NCZ3Fkpm5ZBI2Rh83FsM8qiAIOX2t13xTePChg_c40d89NIvgC9MsoeGpAeeTUtTr9wa0Yo8mA6RINTABxwPz1Khsaf9pe62SI-iAOQLhhDouA79EjGlg4pgOmmIxy52Gku9EtD_8a8XDlzHMGkj-l9wmjL7MWPCjidwINRv6ehzpcN9tu4N7gmPu--n8Z4DHOgpPEJUc1LIxV1beyYy02w4YtHWEZOpwo1_7ie-JOhnx-xFDngxLYD3RAwD2LSm6zeGkCrh2MdNQ3cPPbjSwZVgbQijog5MTRVGYnTmJyIwETnuBBUikAV2Lu8uZPfAbalMoaDUlGw=s512-no";
+var url4 = "https://lh3.googleusercontent.com/9cN6QlJzucqSLVww0z6JNtw5BlDiZTkHM8rNIlSnKNpmp8OqQLVpY9Vzv6B5adWHoGOAdvAxUexkx9NmGzuNOVmi9RtgefnvbLtNm1R-pRiPR3h-SYf2HuVEQb287A-dfbvtFuguwVCWSl8EkecYg8NULRVUzpwCqAtAn-j14CPraC_vb47WcMqcJAgW-Z8k88I1xi8DSOruYl_LT4SdoJhI0Q8aZ6TpA_cPdL9-9ufO89450o4Owabh-NEuy2BzmPAOGzLXR8rKImFYnYPeKH2ZJ-QM-5XLmAUtAJZle9ONWk-_6ZD49e3m3X1NsRBrl5sw1bq1Rd4_Dq4fMIajFSitl3mYdlm9UpCMxqD73cgmx9Ju6PPaoyxBj-rNCx0mhdJUZm6GS5zkl5bb9WCCWdUbUhs1VZ0jvQXW2TwJ_9-WSINBgMnl3Oi5AycAiPRCFJzN31gMv5YXM5qIXHBeCzpiqlAQo9KtsSpasIavyyhLwLM6ZBmw1VDWJdUBY3A6pU_qsMPaXui4FIWta_rCBycrAEuvbv_6AOslqHJGKcs_YLkqEY8E9pPyKM9wmhRN9H3H2nEkrt3scMWbYSuCCjmYrp9VhYjmS06DmhV_fDcxjotqbT8jWDllXz-_stDEENaVsGZg9dxeMCxxRWkY4BqF1GWezfH9nShOqLGPUQPVBECwqGIsoAX6TEeswUrT316DIHUr2V4ExJKLAY3U6nL4ynAbbNEPby5gCPfMuek6be9Law=s512-no";
+var urlIndexes= [url4, url3]
+var underImageList =["New kitten!","Food!"]
 
-//get playlists and generate html
-var playlists = getPlaylists();
-displayPlaylists(playlists);
-
-
-//Get array of user playlists
-function getPlaylists() {
-    var response = callSpotifyAPI("null");
-	trackList = getTracksfromResponse(response);
-	console.log(trackList);
-	return getArrayUserPlaylist(response);
-}
-
-function getTracksfromResponse(response){
-	var playlistUrl = response.items[0].href;
-	var tracksresponse = callSpotifyAPI2(playlistUrl);
-	var trackList=[];
-	for (x in tracksresponse.tracks.items){
-		console.log(tracksresponse.tracks.items[x].track.name);
-		trackList.push(tracksresponse.tracks.items[x].track.name)
-	}
-	return trackList;
-}
-
-//Uses own token to get my playlists from spotifyAPI returns JSON response
-function callSpotifyAPI(url){
-	var user_id = client_id;
-	var authToken =access_token;
-	var token1 = "Bearer " + authToken;
-	var playlistUrl = "https://api.spotify.com/v1/users/" + user_id + "/playlists";
-	var response = httpGet(playlistUrl, token1);
-	var playlist_response = JSON.parse(response);
-	return playlist_response;
-}
-
-//Make trackPLaylist array from JSON response
-function getArrayUserPlaylist(response){
-	var array = [];
-	for (x in response.items) {
-		console.log(response.items[x].name);
-		array.push(response.items[x].name);
-	}
-	return array;
-}
-
-//Simple get request with auth
-function httpGet(theUrl, token) {
-    var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open("GET", theUrl, false); // false for synchronous request
-    xmlHttp.setRequestHeader('Authorization', token);
-    xmlHttp.send();
-    return xmlHttp.responseText;
-}
-
-
-//generate html
-function displayPlaylists(playlists) {
-    document.getElementById("playlists").innerHTML = "";
-    var x;
-    for (x in playlists) {
-
-        document.getElementById("playlists").innerHTML += ' <button class="collapsible">' + playlists[x] + "   " + "<ion-icon name='musical-note'></ion-icon>" + '</button><div class="content" >' + getTracks(playlists[x]) + '</div>'
-    }
+function minus(){
+    SwitchColorTimer(-1);
 
 }
+function plus(){
+    SwitchColorTimer(1);
 
-//generate track html for playlist
-function getTracks(playlist) {
-    var x;
-    var trackItems = "";
-    var tracks = ["song 1 :" + playlist, "song 2 :" + playlist, "song 3 :" + playlist, "song 4 : " + playlist, "song 5 :" + playlist, "song 6 :" + playlist];
-    for (x in tracks) {
 
-        trackItems += "<ion-item><ion-label>" + tracks[x] + " </ion-label>  <ion-checkbox slot='end' value='pepperoni' checked></ion-checkbox>  </ion-item>"
+}
+function SwitchColorTimer(direction){
+    if (lock == false){
+    var timerBox = document.getElementById("timerBox");
+    var animal = document.getElementById("animal");
+    newIndex = indexColorsTimerBox + direction;
+    if(newIndex > (colorsTimerBox.length-1) ){newIndex =0;}
+    if(newIndex < 0 ){newIndex = (colorsTimerBox.length-1); }
+    timerBox.style.backgroundColor = colorsTimerBox[newIndex];
+    animal.src = urlIndexes[newIndex];
+    underImage.innerHTML = underImageList[newIndex]
+    indexColorsTimerBox = newIndex;}
+}
+
+function calculateHours(value){
+    return timeConvert(value/100 * MaxStudyTime);
+}
+
+function timeConvert(n) {
+    var num = n;
+    var hours = (num / 60);
+    var rhours = Math.floor(hours);
+    var minutes = (hours - rhours) * 60;
+    var rminutes = Math.round(minutes);
+    hoursStudy = rhours;
+    minutesStudy = rminutes;
+    return rhours + " hour(s) and " + roundToNearest5(rminutes) + " minute(s).";
+
     }
 
 
-    return " <ion-content fullscreen><ion-list>" + trackItems + "</ion-list><ion-button  " + "onclick='activated(" + '"' + playlist + '"' + ")'>Confirm</ion-button> </ion-content>"
 
+slider.oninput = function() {
+  output.innerHTML = calculateHours(this.value);
+  if(hoursStudy < 1 && minutesStudy < 45){
+    icon2.style.opacity = "0.5";
+    icon3.style.opacity="0.5";
+  }
+  if (minutesStudy > 45){
+  icon2.style.opacity = "1";
+}
+if(hoursStudy > 0 && minutesStudy > 30){
+    icon3.style.opacity = "1"
+}
+if(hoursStudy ==1 && minutesStudy < 30){
+    icon3.style.opacity = "0.5"
+}
+}
+function startFocus(){
+document.getElementById("toHide").hidden = true;
+document.getElementById("timerStart").hidden = false;
+document.getElementById("startButton").innerHTML = "Give up";
+document.getElementById("startButton").onclick = giveUp;
+startCountDown();
+}
+function giveUp(){
+    alert("BOOHOO you gave up :(")
+    document.getElementById("toHide").hidden = false;
+    document.getElementById("timerStart").hidden = true;
+    document.getElementById("startButton").innerHTML = "Start Focussing!";
+    lock = false;
+}
+function endFocus(){
+    timerSection.hidden = false;
+}
+// Update the count down every 1 second
+
+var countDownDate = new Date();
+var x;
+
+function startCountDown(){
+// Set the date we're counting down to
+clearInterval(x);
+
+countDownDate = new Date();
+countDownDate.setHours(countDownDate.getHours() + hoursStudy);
+countDownDate.setMinutes(countDownDate.getMinutes() + minutesStudy);
+x = setInterval(updateClock, 1000);
+lock = true;
 }
 
-//Uses own token to get my playlists from spotifyAPI returns JSON response
-function callSpotifyAPI2(url){
-	var authToken1 =access_token;
-	var token2 = "Bearer " + authToken1;
-	var response = httpGet(url, token2);
-	var playlist_response = JSON.parse(response);
-	return playlist_response;
-}
+function updateClock(){
+    
 
-//generate collapsible divs
-var coll = document.getElementsByClassName("collapsible");
-var i;
-for (i = 0; i < coll.length; i++) {
-    coll[i].addEventListener("click", function() {
-        this.classList.toggle("active_collapsible");
-        var content = this.nextElementSibling;
-        if (content.style.maxHeight) {
-            content.style.maxHeight = null;
-        } else {
-            content.style.maxHeight = "200" + "px";
+        // Get today's date and time
+        var now = new Date().getTime();
+          
+        // Find the distance between now and the count down date
+        var distance = countDownDate.getTime() - now;
+          
+        // Time calculations for days, hours, minutes and seconds
+      
+        var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+          
+        // Output the result in an element with id="demo"
+        document.getElementById("timerStart").innerHTML = hours + "h "
+        + minutes + "m " + seconds + "s ";
+          
+        // If the count down is over, write some text 
+        if (distance < 0) {
+          clearInterval(x);
+          alert("YOU DID IT!!!! Congratulations you've earned cookies and kittens")
+          document.getElementById("toHide").hidden = false;
+          document.getElementById("timerStart").hidden = true;
+          document.getElementById("startButton").innerHTML = "Start Focussing!";
+          lock = false;
         }
-    });
+      
 }
+console.log(httpGet());
+function httpGet(theUrl)
+{
+    console.log("started?")
+    var theUrl = "https://script.google.com/macros/s/AKfycbzqiu7rRgmj5yLRuzCjWqLVM8etRGBygfLU2Jf_XqbI/dev?type=notyp1";
+   
+    var xhr = new XMLHttpRequest()
+        xhr.open('GET', theUrl, true)
+        console.log("opened?")
 
-function activated(playlist) {
-    alert("You have selected the " + playlist + " playlist")
-}
+        xhr.setRequestHeader('Access-Control-Allow-Origin', '*');
+        xhr.setRequestHeader('Content-Type', 'application/json');
+
+         
+
+        console.log("send?");
+
+        xhr.send();
+        console.log("shut?")
+
+        return xhr.responseText;
+    }
+    function openInNewTab() {
+        var theUrl = "https://script.google.com/macros/s/AKfycbzqiu7rRgmj5yLRuzCjWqLVM8etRGBygfLU2Jf_XqbI/dev?type=notyp1";
+        var win = window.open(theUrl, '_blank');
+        win.focus();
+      }
