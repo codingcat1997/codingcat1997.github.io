@@ -154,8 +154,8 @@ function httpGet(theUrl)
         xhr.open('GET', theUrl, true)
         console.log("opened?")
 
-        xhr.setRequestHeader('Access-Control-Allow-Origin', '*');
-        xhr.setRequestHeader('Content-Type', 'application/json');
+        //xhr.setRequestHeader('Access-Control-Allow-Origin: *');
+
 
          
 
