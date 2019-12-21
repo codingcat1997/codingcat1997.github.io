@@ -112,7 +112,9 @@ function giveUp(){
     document.getElementById("notToHide").hidden = true;
     document.getElementById("quote").hidden = true;
     document.getElementById("startButton").innerHTML = "Start Focussing!";
+    updateStatus("I hate Kittens!");
     toggleProgressBar(0);
+    checkForStatus();
     lock = false;
 }
 
