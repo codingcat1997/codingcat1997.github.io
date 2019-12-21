@@ -96,7 +96,7 @@ if(hoursStudy ==1 && minutesStudy < 30){
 }
 function startFocus(){
 document.getElementById("toHide").hidden = true;
-document.getElementById("timerStart").hidden = false;
+document.getElementById("notToHide").hidden = false;
 document.getElementById("quote").hidden = false;
 console.log("updating status to studying")
 updateStatus("Studying");
@@ -109,7 +109,7 @@ startCountDown();
 function giveUp(){
     alert("BOOHOO you gave up :(")
     document.getElementById("toHide").hidden = false;
-    document.getElementById("timerStart").hidden = true;
+    document.getElementById("notToHide").hidden = true;
     document.getElementById("quote").hidden = true;
     document.getElementById("startButton").innerHTML = "Start Focussing!";
     toggleProgressBar(0);
@@ -162,7 +162,7 @@ function updateClock(){
           clearInterval(x);
           alert("YOU DID IT!!!! Congratulations you've earned a new kitten gif")
           document.getElementById("toHide").hidden = false;
-          document.getElementById("timerStart").hidden = true;
+          document.getElementById("notToHide").hidden = true;
           document.getElementById("quote").hidden = true;
 
           document.getElementById("startButton").innerHTML = "Start Focussing!";

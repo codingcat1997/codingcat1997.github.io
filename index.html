@@ -27,10 +27,11 @@
         <h1 class="display-1 text-center">Focat</h1>
    <div class="row">
         <div class="col-12 ">
-      <div class="text-center">
-        <div onclick="giveUp()" hidden="true" id="quote"style="border:solid;border-radius:2%;"> <h3  class="text-center" id="quoteText" style="font-family: 'Pacifico', cursive; ">  "The art of reading and studying consists in remembering the essentials and forgetting what is not essential"</h3>
+      <div class="text-center"  hidden="true" id="notToHide" >
+        <div hidden="true" id="quote"style="border:solid;border-radius:2%;"> <h3  class="text-center" id="quoteText" style="font-family: 'Pacifico', cursive; ">  "The art of reading and studying consists in remembering the essentials and forgetting what is not essential"</h3>
         </div>
-        <p> <h1 style="font-family: 'VT323', monospace; font-size: 5em;" hidden="true" id="timerStart"></h1></p>
+        <p> <h1 style="font-family: 'VT323', monospace; font-size: 5em;" id="timerStart"></h1></p>
+        <button type="button" style="margin:10px;" onclick="giveUp()"class="btn btn-light btn-sm">I hate kittens</button>
         
         </div> <!-- Timer -->
         </div>
@@ -66,7 +67,7 @@
              </div><!-- panel body -->
             
              <div id="toHide2" class="slidecontainer text-center" style="font-size: 24px">
-                <input type="range" min="0" max="120" value="5" class="slider" id="myRange">
+                <input type="range" min="1" max="120" value="5" class="slider" id="myRange">
                 <p  style="font-family: 'VT323', monospace; " ><span class="display-5" id="demo">0 hour(s) and 10 minute(s).</span></p>
                 <i class="fas fa-cat fa-lg" style="color:#8bbabb" id="icon1"></i>
                 <i class="fas fa-cat fa-lg" style="color:#8bbabb" id="icon2"></i>
