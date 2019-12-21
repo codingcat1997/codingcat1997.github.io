@@ -336,7 +336,14 @@ function updateProgressBar(){
         {
           if (xhr.readyState == 4 )
           {
-            amountStudiedToday = parseInt(JSON.parse(xhr.responseText)[0][1][3]);
+              if (woutHere == 1){
+                amountStudiedToday = parseInt(JSON.parse(xhr.responseText)[0][2][3]);
+
+              }
+              else{
+                amountStudiedToday = parseInt(JSON.parse(xhr.responseText)[0][1][3]);
+
+              }
             //var amountStudiedToday = 50;
             var targetStudyTime = 6*60;
             percentageProgressBar = (amountStudiedToday/targetStudyTime) * 100;
