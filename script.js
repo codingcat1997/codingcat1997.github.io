@@ -97,7 +97,7 @@ if(hoursStudy ==1 && minutesStudy < 30){
 function startFocus(){
 document.getElementById("toHide").hidden = true;
 document.getElementById("timerStart").hidden = false;
-document.getElementById("quote").hidden = false;
+document.getElementById("quote").hidden = true;
 console.log("updating status to studying")
 updateStatus("Studying");
 checkForStatus();
