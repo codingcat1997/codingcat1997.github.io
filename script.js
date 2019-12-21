@@ -3,6 +3,7 @@ google.charts.load('current', {packages: ['corechart', 'bar']});
 
 
 var colorsTimerBox =["#BD5532"," #E1B866"];
+var iconNames = ["cat", "fish"]
 var indexColorsTimerBox = 0;
 const MaxStudyTime = 120;
 const roundToNearest5 = x => Math.round(x/5)*5
@@ -48,7 +49,13 @@ function SwitchColorTimer(direction){
     timerBox.style.backgroundColor = colorsTimerBox[newIndex];
     animal.src = urlIndexes[newIndex];
     underImage.innerHTML = underImageList[newIndex]
-    indexColorsTimerBox = newIndex;}
+    indexColorsTimerBox = newIndex;
+    icon1.className = "fas fa-" + iconNames[newIndex] + " fa-lg"
+    icon2.className = "fas fa-" + iconNames[newIndex] + " fa-lg"
+    icon3.className = "fas fa-" + iconNames[newIndex] + " fa-lg"
+
+
+}
 }
 
 function calculateHours(value){
@@ -141,12 +148,15 @@ function updateClock(){
         // If the count down is over, write some text 
         if (distance < 0) {
           clearInterval(x);
-          alert("YOU DID IT!!!! Congratulations you've earned cookies and kittens")
+          alert("YOU DID IT!!!! Congratulations you've earned a new kitten gif")
           document.getElementById("toHide").hidden = false;
           document.getElementById("timerStart").hidden = true;
           document.getElementById("startButton").innerHTML = "Start Focussing!";
           lock = false;
-          httpPostData(countDownDate.toLocaleDateString("en-US"),countDownDate.getTime(),now2.getTime(), 1,1,(hoursStudy*60 + minutesStudy))
+          httpPostData(countDownDate.toLocaleDateString("en-US"),countDownDate.toLocaleTimeString("en-US"),now2.toLocaleTimeString("en-US"), 1,Math.floor(Math.random()* 401) +1 ,(hoursStudy*60 + minutesStudy))
+        updateProgressBar();
+
+   
         }
       
 }
@@ -165,12 +175,14 @@ function httpPostData(date, start, end, cookie, cat, duration){
     xhr.onreadystatechange = function()
     {if (xhr.readyState == 4 ){
         console.log(xhr.responseText)
+        httpGet("Sofie");
+
     }};
     xhr.send();
 
 }
 httpGet("Sofie");
-httpGet("Wout");
+
 //httpGetSofie();
 var historicalDataSofie;
 var historicalDataWout;
@@ -185,13 +197,16 @@ function httpGet(name){
           {
               if(name == "Wout"){
             historicalDataWout = xhr.responseText;
-            renderGraph();}
-           }else{
+            renderGraph();
+
+        }
+           else{
 
             historicalDataSofie = xhr.responseText;
+            httpGet("Wout");
         
            }
-         };
+         };}
         xhr.send();
         return xhr.responseText;
     }
@@ -202,28 +217,66 @@ function httpGet(name){
         var win = window.open(theUrl, '_blank');
         win.focus();
       }
-
+      function getLastMonday() {
+        var t = new Date();
+        t.setDate(t.getDate() - t.getDay() + 1);
+        return t;
+      }
+var weekString = "";
+var startDate;
+var endDate;
+var catsEarned = [];
 function renderGraph(){
+ 
+
+    monday1 = getLastMonday();
+    monday2 = getLastMonday();
+    startDate = getLastMonday();
+
+    var lastMonday = monday1.toLocaleDateString().slice(0,-5);
+    
+    monday2.setDate(monday2.getDate() + 6);
+    endDate = monday2;
+    nextSunday = monday2.toLocaleDateString().slice(0,-5);
+
+    weekString = "Week from "+ lastMonday + " to " + nextSunday;
+    console.log(lastMonday)
+    console.log(nextSunday)
+    
 
    var days = [ 'Saturday','Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
    var dayTotals = Array(7).fill(0);
    var dayTotals2 = Array(7).fill(0);
     
    historicalDataSofie = JSON.parse(historicalDataSofie)[0];
+   dateNow = new Date();
    for (x in historicalDataSofie){
     if (x > 0){
     var d = new Date(historicalDataSofie[x][0])
     var dayName = d.getDay() -1;
+    if( d > startDate && d < endDate){
     dayTotals[dayName] += historicalDataSofie[x][3]}
+    console.log( historicalDataSofie[x])
+    if (d.toLocaleDateString() == dateNow.toLocaleDateString()){
+        catsEarned.push(historicalDataSofie[x][4]);
+        console.log(catsEarned)
+    }
+}
 }
 historicalDataWout = JSON.parse(historicalDataWout)[0];
 for (x in historicalDataWout){
  if (x > 0){
  var d = new Date(historicalDataWout[x][0])
  var dayName = d.getDay() -1;
- dayTotals2[dayName] += historicalDataWout[x][3]}
+ if( d > startDate && d < endDate){
+    dayTotals2[dayName] += historicalDataWout[x][3];
+ }
 }
-drawChart(dayTotals, dayTotals2);}
+}
+
+drawChart(dayTotals, dayTotals2);
+displayGifs();
+}
 
 
 
@@ -241,7 +294,9 @@ function drawChart(dayTotals, dayTotals2) {
       ]);
 
       var options = {
-
+        legend: { position: 'bottom', alignment: 'start' },
+        title: weekString,
+        colors: ['#f6c3e5', '#9aceff']
       };
       var chart = new google.visualization.ColumnChart(document.getElementById("chart"));
       chart.draw(data, options);
@@ -254,4 +309,46 @@ function toggleProgressBar(onOff){
     else{
         document.getElementById("progressBar").className = "progress-bar progress-bar-purple";}
     }
+
+updateProgressBar();
+function updateProgressBar(){
+    
+    var theUrl = "https://script.google.com/macros/s/AKfycbzqiu7rRgmj5yLRuzCjWqLVM8etRGBygfLU2Jf_XqbI/dev?type=amount";
+    var xhr = new XMLHttpRequest()
+        xhr.open('GET', theUrl)
+        xhr.onreadystatechange = function()
+        {
+          if (xhr.readyState == 4 )
+          {
+            amountStudiedToday = parseInt(JSON.parse(xhr.responseText)[0][1][3]);
+            //var amountStudiedToday = 50;
+            var targetStudyTime = 6*60;
+            percentageProgressBar = (amountStudiedToday/targetStudyTime) * 100;
+            progressBar = document.getElementById("progressBar");
+            //progressBar.setAttribute("aria-valuenow", 50);
+            progressBar.setAttribute("style", "width : " + percentageProgressBar + "%;")
+            document.getElementById("progressOfTheDay").innerHTML = "" + Math.round((amountStudiedToday/60)* 100) / 100 + "/6 hours"
+            progressBar.innerHTML = Math.round(percentageProgressBar) + "%"
+          }
+             
+         };
+        xhr.send();
+
+
+    
+
+}
+function displayGifs(){
+    earningSection = document.getElementById("cats");
+earningSection.innerHTML = "";
+catsEarned = [...new Set(catsEarned)];
+catsEarned.reverse();
+    for (x in catsEarned){
+        src = "https://rand.cat/gifs/cat-" + catsEarned[x]  + ".gif"
+        var img = document.createElement('img'); 
+        img.src = src; 
+        img.style = "max-width: 100%; margin-bottom: 10px; "
+         earningSection.appendChild(img); 
+    }}
+    
 

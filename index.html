@@ -25,8 +25,8 @@
     <div class="container">
         
         <h1 class="display-1 text-center">Focat</h1>
-      <h3 class="text-center" style="font-family: 'Pacifico', cursive;">  "The art of reading and studying consists in remembering the essentials and forgetting what is not essential"</h3>
-      <div class="row">
+     <div style="border:solid;border-radius:2%;"> <h3 class="text-center" style="font-family: 'Pacifico', cursive; ">  "The art of reading and studying consists in remembering the essentials and forgetting what is not essential"</h3>
+     </div><div class="row">
         <div class="col-12 ">
       <div class="text-center">
         <p> <h1 style="font-family: 'VT323', monospace; font-size: 5em;" hidden="true" id="timerStart"></h1></p>
@@ -41,9 +41,9 @@
             <div class="row">
                 <div class="col-12 ">
                         <h3 class="text-center">Progress Of The Day   </h3>
-                        <h3 class="text-center"><kbd id="progressOfTheDay">0/8 hours</kbd></h3>
+                        <h3 class="text-center"><kbd id="progressOfTheDay">?/8 hours</kbd></h3>
                         <div class="progress">
-                            <div id="progressBar" class="progress-bar  progress-bar-purple" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%"></div>
+                            <div id="progressBar" class="progress-bar  progress-bar-purple" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
                         </div>
             </div> <!-- col-12-->
             </div> <!-- row-->
@@ -66,13 +66,13 @@
              <div id="toHide2" class="slidecontainer text-center" style="font-size: 24px">
                 <input type="range" min="0" max="120" value="5" class="slider" id="myRange">
                 <p  style="font-family: 'VT323', monospace; " ><span class="display-5" id="demo">0 hour(s) and 10 minute(s).</span></p>
-                <i class="fas fa-book-open fa-lg" style="color:#8bbabb" id="icon1"></i>
-                <i class="fas fa-book-open fa-lg" style="color:#8bbabb" id="icon2"></i>
-                <i class="fas fa-book-open fa-lg" style="color:#8bbabb" id="icon3"></i>
+                <i class="fas fa-cat fa-lg" style="color:#8bbabb" id="icon1"></i>
+                <i class="fas fa-cat fa-lg" style="color:#8bbabb" id="icon2"></i>
+                <i class="fas fa-cat fa-lg" style="color:#8bbabb" id="icon3"></i>
 
             </div><!-- books/rangeslider -->
             
-            <div class="text-center"><button data-toggle="" data-target="#timerSection" type="button" onclick=startFocus() id="startButton" class="btn btn-info text-center">Start focussing!</button>
+            <div class="text-center"><button style=" margin-bottom: 10px; margin-top: 10px;" data-toggle="" data-target="#timerSection" type="button" onclick=startFocus() id="startButton" class="btn btn-info text-center">Start focussing!</button>
 </div>
          
         </div> <!-- panel -->
@@ -84,11 +84,24 @@
                
                 <div class="panel panel-default background-light-purple " id="historySection">
                     <div class="panel-heading background-light-purple"><h3>History</h3> </div>
-                    <div class="chart background-light-purple" id="chart"></div>
+                    <div class="panel-body background-light-purple text-center">
+                    <div class="chart background-light-purple" id="chart"></div></div>
                 </div>
         </div><!-- col-12 -->
     </div><!-- row -->
-    </div>
+    <div class="row">
+        <div class="col-12">
+               
+                <div class="panel panel-default background-light-purple " id="historySection">
+                    <div class="panel-heading background-light-purple"><h3>Earned gifs</h3> </div>
+                    <div class="panel-body background-light-purple text-center" id="cats">
+
+                    </div>
+                    
+                </div>
+        </div><!-- col-12 -->
+    </div><!-- row -->
+    </div><!-- To hide -->
 </div> <!--Main Container-->
       
 </body>
