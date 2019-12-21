@@ -1,6 +1,9 @@
 google.charts.load("current", {packages:['corechart']});
 google.charts.load('current', {packages: ['corechart', 'bar']});
 
+var url_string = window.location.href;
+var url = new URL(url_string);
+var woutHere = parseInt(url.searchParams.get("wout"));
 
 var colorsTimerBox =["#BD5532"," #E1B866"];
 var iconNames = ["cat", "fish"]
@@ -170,6 +173,9 @@ function httpPostData(date, start, end, cookie, cat, duration){
 
 
     var theUrl = "https://script.google.com/macros/s/AKfycbwG4e8t5r6wKcoVjBRQft8ZpwH-zH8Cznh8Ch8qkp-dUtMokgJl/exec"+"?cookie="+cookie+"&type=push&name=Sofie"+ "&start="+start+"&end="+end+"&cat="+cat+"&duration="+ duration+"&date="+date ;
+    if (woutHere == 1){
+         theUrl = "https://script.google.com/macros/s/AKfycbwG4e8t5r6wKcoVjBRQft8ZpwH-zH8Cznh8Ch8qkp-dUtMokgJl/exec"+"?cookie="+cookie+"&type=push&name=Wout"+ "&start="+start+"&end="+end+"&cat="+cat+"&duration="+ duration+"&date="+date ;
+    }
     var xhr = new XMLHttpRequest()
     xhr.open('GET', theUrl)
     xhr.onreadystatechange = function()
@@ -197,12 +203,14 @@ function httpGet(name){
           {
               if(name == "Wout"){
             historicalDataWout = xhr.responseText;
+            historicalDataWout = JSON.parse(historicalDataWout)[0];
             renderGraph();
 
         }
            else{
 
             historicalDataSofie = xhr.responseText;
+            historicalDataSofie = JSON.parse(historicalDataSofie)[0];
             httpGet("Wout");
         
            }
@@ -226,29 +234,27 @@ var weekString = "";
 var startDate;
 var endDate;
 var catsEarned = [];
+var catsEarnedWout = [];
+
+monday1 = getLastMonday();
+monday2 = getLastMonday();
+startDate = getLastMonday();
+
+var lastMonday = monday1.toLocaleDateString().slice(0,-5);
+
+monday2.setDate(monday2.getDate() + 6);
+endDate = monday2;
+nextSunday = monday2.toLocaleDateString().slice(0,-5);
+
+weekString = "Week from "+ lastMonday + " to " + nextSunday;
+console.log(lastMonday)
+console.log(nextSunday)
 function renderGraph(){
- 
-
-    monday1 = getLastMonday();
-    monday2 = getLastMonday();
-    startDate = getLastMonday();
-
-    var lastMonday = monday1.toLocaleDateString().slice(0,-5);
-    
-    monday2.setDate(monday2.getDate() + 6);
-    endDate = monday2;
-    nextSunday = monday2.toLocaleDateString().slice(0,-5);
-
-    weekString = "Week from "+ lastMonday + " to " + nextSunday;
-    console.log(lastMonday)
-    console.log(nextSunday)
-    
-
    var days = [ 'Saturday','Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
    var dayTotals = Array(7).fill(0);
    var dayTotals2 = Array(7).fill(0);
     
-   historicalDataSofie = JSON.parse(historicalDataSofie)[0];
+ 
    dateNow = new Date();
    for (x in historicalDataSofie){
     if (x > 0){
@@ -256,14 +262,14 @@ function renderGraph(){
     var dayName = d.getDay() -1;
     if( d > startDate && d < endDate){
     dayTotals[dayName] += historicalDataSofie[x][3]}
-    console.log( historicalDataSofie[x])
+   
     if (d.toLocaleDateString() == dateNow.toLocaleDateString()){
         catsEarned.push(historicalDataSofie[x][4]);
-        console.log(catsEarned)
+      
     }
 }
 }
-historicalDataWout = JSON.parse(historicalDataWout)[0];
+
 for (x in historicalDataWout){
  if (x > 0){
  var d = new Date(historicalDataWout[x][0])
@@ -271,6 +277,10 @@ for (x in historicalDataWout){
  if( d > startDate && d < endDate){
     dayTotals2[dayName] += historicalDataWout[x][3];
  }
+ if (d.toLocaleDateString() == dateNow.toLocaleDateString()){
+    catsEarnedWout.push(historicalDataWout[x][4]);
+    console.log(catsEarnedWout)
+}
 }
 }
 
@@ -341,14 +351,31 @@ function updateProgressBar(){
 function displayGifs(){
     earningSection = document.getElementById("cats");
 earningSection.innerHTML = "";
-catsEarned = [...new Set(catsEarned)];
-catsEarned.reverse();
-    for (x in catsEarned){
+
+catlist = [...new Set(catsEarned)];
+if (woutHere == 1){
+ catlist =  [...new Set(catsEarnedWout)];
+}
+    for (x in catlist.reverse()){
         src = "https://rand.cat/gifs/cat-" + catsEarned[x]  + ".gif"
         var img = document.createElement('img'); 
         img.src = src; 
         img.style = "max-width: 100%; margin-bottom: 10px; "
          earningSection.appendChild(img); 
-    }}
+    }
+catsEarned = [];
+catsEarnedWout=[];
+}
     
+function clicky(offset){
+    startDate.setDate(startDate.getDate() + offset);
+    console.log(startDate.toLocaleDateString())
+    endDate.setDate(endDate.getDate() + offset);
+    console.log(endDate.toLocaleDateString());
+    nextSunday = monday2.toLocaleDateString().slice(0,-5);
+    var newdate = startDate;
+    var newerdate = endDate;
 
+weekString = "Week from "+ newdate.toLocaleDateString().slice(0,-5) + " to " +  newerdate.toLocaleDateString().slice(0,-5);
+    renderGraph();
+}
