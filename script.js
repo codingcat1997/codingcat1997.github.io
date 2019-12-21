@@ -97,6 +97,10 @@ if(hoursStudy ==1 && minutesStudy < 30){
 function startFocus(){
 document.getElementById("toHide").hidden = true;
 document.getElementById("timerStart").hidden = false;
+document.getElementById("quote").hidden = false;
+console.log("updating status to studying")
+updateStatus("Studying");
+checkForStatus();
 
 toggleProgressBar(1);
 startCountDown();
@@ -106,6 +110,7 @@ function giveUp(){
     alert("BOOHOO you gave up :(")
     document.getElementById("toHide").hidden = false;
     document.getElementById("timerStart").hidden = true;
+    document.getElementById("quote").hidden = true;
     document.getElementById("startButton").innerHTML = "Start Focussing!";
     toggleProgressBar(0);
     lock = false;
@@ -158,6 +163,8 @@ function updateClock(){
           lock = false;
           httpPostData(countDownDate.toLocaleDateString("en-US"),countDownDate.toLocaleTimeString("en-US"),now2.toLocaleTimeString("en-US"), 1,Math.floor(Math.random()* 401) +1 ,(hoursStudy*60 + minutesStudy))
         updateProgressBar();
+        updateStatus("Pausing");
+        checkForStatus();
 
    
         }
@@ -279,7 +286,6 @@ for (x in historicalDataWout){
  }
  if (d.toLocaleDateString() == dateNow.toLocaleDateString()){
     catsEarnedWout.push(historicalDataWout[x][4]);
-    console.log(catsEarnedWout)
 }
 }
 }
@@ -356,11 +362,12 @@ catlist = [...new Set(catsEarned)];
 if (woutHere == 1){
  catlist =  [...new Set(catsEarnedWout)];
 }
-    for (x in catlist.reverse()){
-        src = "https://rand.cat/gifs/cat-" + catsEarned[x]  + ".gif"
+console.log(catlist)
+    for (x in catlist){
+        src = "https://rand.cat/gifs/cat-" + catlist[x]  + ".gif"
         var img = document.createElement('img'); 
         img.src = src; 
-        img.style = "max-width: 100%; margin-bottom: 10px; "
+        img.style = "max-width: 100%; margin-bottom: 10px; margin: 5px;"
          earningSection.appendChild(img); 
     }
 catsEarned = [];
@@ -378,4 +385,60 @@ function clicky(offset){
 
 weekString = "Week from "+ newdate.toLocaleDateString().slice(0,-5) + " to " +  newerdate.toLocaleDateString().slice(0,-5);
     renderGraph();
+}
+checkForStatus();
+function checkForStatus(){
+
+    var theUrl = "https://script.google.com/macros/s/AKfycbzqiu7rRgmj5yLRuzCjWqLVM8etRGBygfLU2Jf_XqbI/dev?type=amount";
+
+    var xhr = new XMLHttpRequest()
+        xhr.open('GET', theUrl)
+        xhr.onreadystatechange = function()
+        {
+          if (xhr.readyState == 4 )
+          {
+            statusWout = JSON.parse(xhr.responseText)[0][2][1];
+            statusSofie = JSON.parse(xhr.responseText)[0][1][1];
+            if (statusWout == "Pausing"){
+                iconWout =  " <i class='fas fa-bed'></i>";
+                colorHexWout = "#a278b5";
+            }else{
+                iconWout = " <i class='fas fa-graduation-cap'></i>";
+                colorHexWout = "#bac7a7";
+            }
+            if (statusSofie == "Pausing"){
+                iconSofie =  " <i class='fas fa-bed'></i>";
+                colorHexSofie = "#a278b5";
+            }else{
+                iconSofie = " <i class='fas fa-graduation-cap'></i>";
+                colorHexSofie = "#bac7a7";
+            }
+            document.getElementById("statusWout").innerHTML = statusWout + iconWout;
+            document.getElementById("statusWout").setAttribute("style", "background-color: "+ colorHexWout +";")
+            document.getElementById("statusSofie").innerHTML = statusSofie + iconSofie;
+            document.getElementById("statusSofie").setAttribute("style", "background-color:"+ colorHexSofie+ ";")
+            
+
+            
+          }
+             
+         };
+        xhr.send();
+
+
+}
+function updateStatus(newStatus){
+
+    if(woutHere == 1){
+        var theUrl = "https://script.google.com/macros/s/AKfycbzqiu7rRgmj5yLRuzCjWqLVM8etRGBygfLU2Jf_XqbI/dev?type=status&name=Wout&value="+ newStatus;
+    }else{
+    var theUrl = "https://script.google.com/macros/s/AKfycbzqiu7rRgmj5yLRuzCjWqLVM8etRGBygfLU2Jf_XqbI/dev?type=status&name=Sofie&value="+ newStatus;}
+    var xhr = new XMLHttpRequest()
+    xhr.onreadystatechange = function()
+    {if (xhr.readyState == 4 ){
+       console.log("Joepie updated to " + theUrl)
+
+    }};
+        xhr.open('GET', theUrl)
+        xhr.send();
 }
