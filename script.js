@@ -107,6 +107,7 @@ startCountDown();
 }
 
 function giveUp(){
+    clearInterval(x);
     alert("BOOHOO you gave up :(")
     document.getElementById("toHide").hidden = false;
     document.getElementById("notToHide").hidden = true;
@@ -119,6 +120,7 @@ function giveUp(){
 }
 
 function endFocus(){
+    clearInterval(x);
     toggleProgressBar(0);
     timerSection.hidden = false;
 }
@@ -162,7 +164,7 @@ function updateClock(){
         // If the count down is over, write some text 
         if (distance < 0) {
           clearInterval(x);
-          alert("YOU DID IT!!!! Congratulations you've earned a new kitten gif")
+          alert("YOU DID IT!!!! Congratulations you've earned a new kitten gif");
           document.getElementById("toHide").hidden = false;
           document.getElementById("notToHide").hidden = true;
           document.getElementById("quote").hidden = true;
