@@ -431,7 +431,7 @@ function checkForStatus(){
             document.getElementById("statusWout").setAttribute("style", "background-color: "+ colorHexWout +";")
             document.getElementById("statusSofie").innerHTML = statusSofie + iconSofie;
             document.getElementById("statusSofie").setAttribute("style", "background-color:"+ colorHexSofie+ ";")
-            document.getElementById("quote").innerHTML = quoteOfTheDay;
+            document.getElementById("quoteText").innerHTML = quoteOfTheDay;
 
             
           }
