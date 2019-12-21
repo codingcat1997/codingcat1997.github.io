@@ -1,3 +1,7 @@
+google.charts.load("current", {packages:['corechart']});
+google.charts.load('current', {packages: ['corechart', 'bar']});
+
+
 var colorsTimerBox =["#BD5532"," #E1B866"];
 var indexColorsTimerBox = 0;
 const MaxStudyTime = 120;
@@ -48,7 +52,7 @@ function SwitchColorTimer(direction){
 }
 
 function calculateHours(value){
-    return timeConvert(value/100 * MaxStudyTime);
+    return timeConvert(value);
 }
 
 function timeConvert(n) {
@@ -59,8 +63,7 @@ function timeConvert(n) {
     var rminutes = Math.round(minutes);
     hoursStudy = rhours;
     minutesStudy = rminutes;
-    return rhours + " hour(s) and " + roundToNearest5(rminutes) + " minute(s).";
-
+    return rhours + " hour(s) and " + rminutes + " minute(s).";
     }
 
 
@@ -84,18 +87,22 @@ if(hoursStudy ==1 && minutesStudy < 30){
 function startFocus(){
 document.getElementById("toHide").hidden = true;
 document.getElementById("timerStart").hidden = false;
-document.getElementById("startButton").innerHTML = "Give up";
-document.getElementById("startButton").onclick = giveUp;
+
+toggleProgressBar(1);
 startCountDown();
 }
+
 function giveUp(){
     alert("BOOHOO you gave up :(")
     document.getElementById("toHide").hidden = false;
     document.getElementById("timerStart").hidden = true;
     document.getElementById("startButton").innerHTML = "Start Focussing!";
+    toggleProgressBar(0);
     lock = false;
 }
+
 function endFocus(){
+    toggleProgressBar(0);
     timerSection.hidden = false;
 }
 // Update the count down every 1 second
@@ -115,11 +122,9 @@ lock = true;
 }
 
 function updateClock(){
-    
-
         // Get today's date and time
         var now = new Date().getTime();
-          
+        var now2 = new Date();
         // Find the distance between now and the count down date
         var distance = countDownDate.getTime() - now;
           
@@ -141,33 +146,112 @@ function updateClock(){
           document.getElementById("timerStart").hidden = true;
           document.getElementById("startButton").innerHTML = "Start Focussing!";
           lock = false;
+          httpPostData(countDownDate.toLocaleDateString("en-US"),countDownDate.getTime(),now2.getTime(), 1,1,(hoursStudy*60 + minutesStudy))
         }
       
 }
-console.log(httpGet());
-function httpGet(theUrl)
-{
-    console.log("started?")
-    var theUrl = "https://script.google.com/macros/s/AKfycbzqiu7rRgmj5yLRuzCjWqLVM8etRGBygfLU2Jf_XqbI/dev?type=notyp1";
-   
+function httpPostData(date, start, end, cookie, cat, duration){
+    console.log(date)
+    console.log(start)
+    console.log(end)
+    console.log(cookie)
+    console.log(cat)
+    console.log(duration)
+
+
+    var theUrl = "https://script.google.com/macros/s/AKfycbwG4e8t5r6wKcoVjBRQft8ZpwH-zH8Cznh8Ch8qkp-dUtMokgJl/exec"+"?cookie="+cookie+"&type=push&name=Sofie"+ "&start="+start+"&end="+end+"&cat="+cat+"&duration="+ duration+"&date="+date ;
     var xhr = new XMLHttpRequest()
-        xhr.open('GET', theUrl, true)
-        console.log("opened?")
+    xhr.open('GET', theUrl)
+    xhr.onreadystatechange = function()
+    {if (xhr.readyState == 4 ){
+        console.log(xhr.responseText)
+    }};
+    xhr.send();
 
-        //xhr.setRequestHeader('Access-Control-Allow-Origin: *');
+}
+httpGet("Sofie");
+httpGet("Wout");
+//httpGetSofie();
+var historicalDataSofie;
+var historicalDataWout;
+function httpGet(name){
+    //var theUrl = "https://script.google.com/macros/s/AKfycbzqiu7rRgmj5yLRuzCjWqLVM8etRGBygfLU2Jf_XqbI/dev?type=notyp1";
+   var theUrl = "https://script.google.com/macros/s/AKfycbwG4e8t5r6wKcoVjBRQft8ZpwH-zH8Cznh8Ch8qkp-dUtMokgJl/exec" + "?type=getData&name="+ name;
+    var xhr = new XMLHttpRequest()
+        xhr.open('GET', theUrl)
+        xhr.onreadystatechange = function()
+        {
+          if (xhr.readyState == 4 )
+          {
+              if(name == "Wout"){
+            historicalDataWout = xhr.responseText;
+            renderGraph();}
+           }else{
 
-
-         
-
-        console.log("send?");
-
+            historicalDataSofie = xhr.responseText;
+        
+           }
+         };
         xhr.send();
-        console.log("shut?")
-
         return xhr.responseText;
     }
+
+
     function openInNewTab() {
         var theUrl = "https://script.google.com/macros/s/AKfycbzqiu7rRgmj5yLRuzCjWqLVM8etRGBygfLU2Jf_XqbI/dev?type=notyp1";
         var win = window.open(theUrl, '_blank');
         win.focus();
       }
+
+function renderGraph(){
+
+   var days = [ 'Saturday','Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+   var dayTotals = Array(7).fill(0);
+   var dayTotals2 = Array(7).fill(0);
+    
+   historicalDataSofie = JSON.parse(historicalDataSofie)[0];
+   for (x in historicalDataSofie){
+    if (x > 0){
+    var d = new Date(historicalDataSofie[x][0])
+    var dayName = d.getDay() -1;
+    dayTotals[dayName] += historicalDataSofie[x][3]}
+}
+historicalDataWout = JSON.parse(historicalDataWout)[0];
+for (x in historicalDataWout){
+ if (x > 0){
+ var d = new Date(historicalDataWout[x][0])
+ var dayName = d.getDay() -1;
+ dayTotals2[dayName] += historicalDataWout[x][3]}
+}
+drawChart(dayTotals, dayTotals2);}
+
+
+
+function drawChart(dayTotals, dayTotals2) {
+
+    var data = google.visualization.arrayToDataTable([
+        [ 'Minutes Studies','Sofie','Wout'],
+        ['Mon',dayTotals[0],dayTotals2[0] ],
+        ['Tue', dayTotals[1],dayTotals2[1]],
+        ['Wed',dayTotals[2],dayTotals2[2]],
+        ['Thu', dayTotals[3],dayTotals2[3]],
+        ['Fri', dayTotals[4],dayTotals2[4]],
+        ['Sat',dayTotals[5],dayTotals2[5]],
+        ['Sun',dayTotals[6],dayTotals2[6]]
+      ]);
+
+      var options = {
+
+      };
+      var chart = new google.visualization.ColumnChart(document.getElementById("chart"));
+      chart.draw(data, options);
+	
+}
+
+function toggleProgressBar(onOff){
+    if (onOff == 1){
+    document.getElementById("progressBar").className = "progress-bar progress-bar-striped progress-bar-animated progress-bar-purple";}
+    else{
+        document.getElementById("progressBar").className = "progress-bar progress-bar-purple";}
+    }
+

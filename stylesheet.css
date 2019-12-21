@@ -42,7 +42,7 @@
     height: 25px;
     border-radius: 50%;
 
-    background: #4CAF50;
+    background: #a278b5;
     cursor: pointer;
   }
   
@@ -54,3 +54,15 @@
 
     cursor: pointer;
   }
+  .progress-bar-purple {
+    background-color: #a278b5 !important;
+}
+
+.background-light-purple {
+  background-color: #effffb !important;
+}
+
+body {
+  background-color: #fbdff0 !important;
+  color: #381460;
+}
