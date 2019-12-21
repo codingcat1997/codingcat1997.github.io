@@ -97,7 +97,7 @@ if(hoursStudy ==1 && minutesStudy < 30){
 function startFocus(){
 document.getElementById("toHide").hidden = true;
 document.getElementById("timerStart").hidden = false;
-document.getElementById("quote").hidden = true;
+document.getElementById("quote").hidden = false;
 console.log("updating status to studying")
 updateStatus("Studying");
 checkForStatus();
@@ -163,6 +163,8 @@ function updateClock(){
           alert("YOU DID IT!!!! Congratulations you've earned a new kitten gif")
           document.getElementById("toHide").hidden = false;
           document.getElementById("timerStart").hidden = true;
+          document.getElementById("quote").hidden = true;
+
           document.getElementById("startButton").innerHTML = "Start Focussing!";
           lock = false;
           httpPostData(countDownDate.toLocaleDateString("en-US"),countDownDate.toLocaleTimeString("en-US"),now2.toLocaleTimeString("en-US"), 1,Math.floor(Math.random()* 401) +1 ,(hoursStudy*60 + minutesStudy))
@@ -410,6 +412,7 @@ function checkForStatus(){
           {
             statusWout = JSON.parse(xhr.responseText)[0][2][1];
             statusSofie = JSON.parse(xhr.responseText)[0][1][1];
+            quoteOfTheDay =  JSON.parse(xhr.responseText)[0][3][1]
             if (statusWout == "Pausing"){
                 iconWout =  " <i class='fas fa-bed'></i>";
                 colorHexWout = "#a278b5";
@@ -428,7 +431,7 @@ function checkForStatus(){
             document.getElementById("statusWout").setAttribute("style", "background-color: "+ colorHexWout +";")
             document.getElementById("statusSofie").innerHTML = statusSofie + iconSofie;
             document.getElementById("statusSofie").setAttribute("style", "background-color:"+ colorHexSofie+ ";")
-            
+            document.getElementById("quote").innerHTML = quoteOfTheDay;
 
             
           }
