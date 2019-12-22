@@ -279,8 +279,13 @@ function renderGraph(){
     if (x > 0){
     var d = new Date(historicalDataSofie[x][0])
     var dayName = d.getDay() -1;
-    if( d > startDate && d < endDate){
+    startDate.setHours(0,0,0,0)
+    endDate.setHours(23,59,59,99)
+    if( d >= startDate && d <= endDate){
+        if (dayName == -1){dayTotals[6] += historicalDataSofie[x][3]}
+        else{
     dayTotals[dayName] += historicalDataSofie[x][3]}
+}
    
     if (d.toLocaleDateString() == dateNow.toLocaleDateString()){
         catsEarned.push(historicalDataSofie[x][4]);
@@ -288,14 +293,20 @@ function renderGraph(){
     }
 }
 }
+
 console.log(historicalDataWout)
 for (x in historicalDataWout){
  if (x > 0){
  var d = new Date(historicalDataWout[x][0])
  var dayName = d.getDay() -1;
- if( d > startDate && d < endDate){
-    dayTotals2[dayName] += historicalDataWout[x][3];
- }
+ startDate.setHours(0,0,0,0)
+ endDate.setHours(23,59,59,99)
+ console.log(d)
+ if( d >= startDate && d <= endDate){
+    if (dayName == -1){dayTotals[6] += historicalDataWout[x][3]}
+    else{
+dayTotals2[dayName] += historicalDataWout[x][3]}
+}
  if (d.toLocaleDateString() == dateNow.toLocaleDateString()){
     catsEarnedWout.push(historicalDataWout[x][4]);
 }
