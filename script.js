@@ -171,7 +171,8 @@ function updateClock(){
 
           document.getElementById("startButton").innerHTML = "Start Focussing!";
           lock = false;
-          httpPostData(countDownDate.toLocaleDateString("en-US"),countDownDate.toLocaleTimeString("en-US"),now2.toLocaleTimeString("en-US"), 1,Math.floor(Math.random()* 401) +1 ,(hoursStudy*60 + minutesStudy))
+           formatted_date = countDownDate.getDate() + "-" + (countDownDate.getMonth() + 1) + "-" + countDownDate.getFullYear()
+          httpPostData(formatted_date,countDownDate.toLocaleTimeString(),now2.toLocaleTimeString(), 1,Math.floor(Math.random()* 401) +1 ,(hoursStudy*60 + minutesStudy))
         updateProgressBar();
         updateStatus("Pausing");
         checkForStatus();
@@ -220,6 +221,7 @@ function httpGet(name){
           {
               if(name == "Wout"){
             historicalDataWout = xhr.responseText;
+            console.log(historicalDataWout)
             historicalDataWout = JSON.parse(historicalDataWout)[0];
             renderGraph();
 
@@ -286,7 +288,7 @@ function renderGraph(){
     }
 }
 }
-
+console.log(historicalDataWout)
 for (x in historicalDataWout){
  if (x > 0){
  var d = new Date(historicalDataWout[x][0])
