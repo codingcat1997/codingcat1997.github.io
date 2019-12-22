@@ -303,7 +303,8 @@ for (x in historicalDataWout){
  endDate.setHours(23,59,59,99)
  console.log(d)
  if( d >= startDate && d <= endDate){
-    if (dayName == -1){dayTotals[6] += historicalDataWout[x][3]}
+     console.log(d + "gelukttt")
+    if (dayName == -1){dayTotals2[6] += historicalDataWout[x][3]}
     else{
 dayTotals2[dayName] += historicalDataWout[x][3]}
 }
