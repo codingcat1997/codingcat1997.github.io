@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/push.js/1.0.5/push.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <link href="https://fonts.googleapis.com/css?family=Pacifico&display=swap" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -18,10 +19,13 @@
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <link href="https://fonts.googleapis.com/css?family=VT323&display=swap" rel="stylesheet">
 
+
 </head>
 
 <body>
-    
+   
+    <button hidden="true" class="request-button">Request permissions</button>
+    <button hidden="true" class="show-button">Show notification</button>
     <div class="container">
         
         <h1 class="display-1 text-center">Focat</h1>
@@ -70,8 +74,8 @@
                 <input type="range" min="0" max="120" value="5" class="slider" id="myRange">
                 <p  style="font-family: 'VT323', monospace; " ><span class="display-5" id="demo">0 hour(s) and 10 minute(s).</span></p>
                 <i class="fas fa-cat fa-lg" style="color:#8bbabb" id="icon1"></i>
-                <i class="fas fa-cat fa-lg" style="color:#8bbabb" id="icon2"></i>
-                <i class="fas fa-cat fa-lg" style="color:#8bbabb" id="icon3"></i>
+                <i class="fas fa-child fa-lg" style="color:#8bbabb" id="icon2"></i>
+                <i class="fas fa-paw fa-lg" style="color:#8bbabb" id="icon3"></i>
 
             </div><!-- books/rangeslider -->
             

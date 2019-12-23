@@ -1,3 +1,29 @@
+var requestButton = document.querySelector(".request-button");
+var showButton = document.querySelector(".show-button");
+
+function onGranted() {
+    requestButton.style.background = "green";
+}
+
+function onDenied() {
+    requestButton.style.background = "red";
+}
+
+requestButton.onclick = function() {
+    Push.Permission.request(onGranted, onDenied);
+}
+
+showButton.onclick = function() {
+    Push.create("Hello from Sabe.io!", {
+        body: "This is a web notification!",
+        icon: "https://rand.cat/gifs/cat-219.gif",
+        timeout: 1,
+        onClick: function() {
+            console.log(this);
+        }
+    });
+};
+
 google.charts.load("current", {packages:['corechart']});
 google.charts.load('current', {packages: ['corechart', 'bar']});
 
@@ -53,9 +79,10 @@ function SwitchColorTimer(direction){
     animal.src = urlIndexes[newIndex];
     underImage.innerHTML = underImageList[newIndex]
     indexColorsTimerBox = newIndex;
-    icon1.className = "fas fa-" + iconNames[newIndex] + " fa-lg"
-    icon2.className = "fas fa-" + iconNames[newIndex] + " fa-lg"
-    icon3.className = "fas fa-" + iconNames[newIndex] + " fa-lg"
+
+    //icon1.className = "fas fa-" + iconNames[newIndex] + " fa-lg"
+    //icon2.className = "fas fa-" + iconNames[newIndex] + " fa-lg"
+    //icon3.className = "fas fa-" + iconNames[newIndex] + " fa-lg"
 
 
 }
@@ -172,7 +199,24 @@ function updateClock(){
           document.getElementById("startButton").innerHTML = "Start Focussing!";
           lock = false;
            formatted_date = countDownDate.getDate() + "-" + (countDownDate.getMonth() + 1) + "-" + countDownDate.getFullYear()
-          httpPostData(formatted_date,countDownDate.toLocaleTimeString(),now2.toLocaleTimeString(), 1,Math.floor(Math.random()* 401) +1 ,(hoursStudy*60 + minutesStudy))
+            console.log(hoursStudy + "min")
+            console.log(minutesStudy + "hour")
+            totalMinutes = minutesStudy + hoursStudy*60;
+            if (totalMinutes > -1){
+                catint = Math.floor(Math.random()* 401) +1;
+            }
+            if(totalMinutes > 59){
+                babyInt = Math.floor(Math.random()* 100) +1;
+            }else{
+                babyInt = 0; 
+            }
+            if(totalMinutes > 89){
+                dogINt = Math.floor(Math.random()* 100) +1;
+            }else{
+                dogINt = 0;
+            }
+
+          httpPostData(formatted_date,countDownDate.toLocaleTimeString(),now2.toLocaleTimeString(), 1, catint,(hoursStudy*60 + minutesStudy), dogINt, babyInt)
         updateProgressBar();
         updateStatus("Pausing");
         checkForStatus();
@@ -181,7 +225,7 @@ function updateClock(){
         }
       
 }
-function httpPostData(date, start, end, cookie, cat, duration){
+function httpPostData(date, start, end, cookie, cat, duration, dog, baby){
     console.log(date)
     console.log(start)
     console.log(end)
@@ -190,9 +234,9 @@ function httpPostData(date, start, end, cookie, cat, duration){
     console.log(duration)
 
 
-    var theUrl = "https://script.google.com/macros/s/AKfycbwG4e8t5r6wKcoVjBRQft8ZpwH-zH8Cznh8Ch8qkp-dUtMokgJl/exec"+"?cookie="+cookie+"&type=push&name=Sofie"+ "&start="+start+"&end="+end+"&cat="+cat+"&duration="+ duration+"&date="+date ;
+    var theUrl = "https://script.google.com/macros/s/AKfycbwG4e8t5r6wKcoVjBRQft8ZpwH-zH8Cznh8Ch8qkp-dUtMokgJl/exec"+"?cookie="+cookie+"&type=push&name=Sofie"+ "&start="+start+"&end="+end+"&cat="+cat+"&duration="+ duration+"&date="+date+"&dog="+dog+"&baby="+baby ;
     if (woutHere == 1){
-         theUrl = "https://script.google.com/macros/s/AKfycbwG4e8t5r6wKcoVjBRQft8ZpwH-zH8Cznh8Ch8qkp-dUtMokgJl/exec"+"?cookie="+cookie+"&type=push&name=Wout"+ "&start="+start+"&end="+end+"&cat="+cat+"&duration="+ duration+"&date="+date ;
+         theUrl = "https://script.google.com/macros/s/AKfycbwG4e8t5r6wKcoVjBRQft8ZpwH-zH8Cznh8Ch8qkp-dUtMokgJl/exec"+"?cookie="+cookie+"&type=push&name=Wout"+ "&start="+start+"&end="+end+"&cat="+cat+"&duration="+ duration+"&date="+date+"&dog="+dog+"&baby="+baby ;
     }
     var xhr = new XMLHttpRequest()
     xhr.open('GET', theUrl)
@@ -254,6 +298,11 @@ var startDate;
 var endDate;
 var catsEarned = [];
 var catsEarnedWout = [];
+var babiesEarned = [];
+var babiesEarnedWout = [];
+var dogEarned = [];
+var dogEarnedWout = [];
+globalDog = [];
 
 monday1 = getLastMonday();
 monday2 = getLastMonday();
@@ -289,8 +338,11 @@ function renderGraph(){
    
     if (d.toLocaleDateString() == dateNow.toLocaleDateString()){
         catsEarned.push(historicalDataSofie[x][4]);
-      
+        babiesEarned.push(historicalDataSofie[x][6]); 
+        dogEarned.push(historicalDataSofie[x][7]); 
+
     }
+    globalDog = dogEarned;
 }
 }
 
@@ -310,6 +362,8 @@ dayTotals2[dayName] += historicalDataWout[x][3]}
 }
  if (d.toLocaleDateString() == dateNow.toLocaleDateString()){
     catsEarnedWout.push(historicalDataWout[x][4]);
+    babiesEarnedWout.push(historicalDataWout[x][6]);
+    dogEarnedWout.push(historicalDataWout[x][7]);
 }
 }
 }
@@ -385,15 +439,26 @@ function updateProgressBar(){
     
 
 }
+
 function displayGifs(){
     earningSection = document.getElementById("cats");
 earningSection.innerHTML = "";
 
 catlist = [...new Set(catsEarned)];
+babyList = [...new Set(babiesEarned)];
+
+dogList = [...new Set(globalDog)];
 if (woutHere == 1){
  catlist =  [...new Set(catsEarnedWout)];
+ babylist =  [...new Set(babiesEarnedWout)];
+ dogList = [...new Set(dogEarnedWout)];
 }
 console.log(catlist)
+
+console.log(babyList)
+
+console.log(dogList)
+
     for (x in catlist){
         src = "https://rand.cat/gifs/cat-" + catlist[x]  + ".gif"
         var img = document.createElement('img'); 
@@ -401,8 +466,28 @@ console.log(catlist)
         img.style = "max-width: 100%; margin-bottom: 10px; margin: 5px;"
          earningSection.appendChild(img); 
     }
+    for (x in babyList){
+        if (babyList[x] > 0){
+        src = "https://acegif.com/wp-content/uploads/acegif-funny-baby-" + babyList[x]  + ".gif"
+        var img = document.createElement('img'); 
+        img.src = src; 
+        img.style = "max-width: 100%; margin-bottom: 10px; margin: 5px;"
+         earningSection.appendChild(img); }
+    }
+    for (x in dogList){
+        if (dogList[x] > 0){
+        src = "http://www.doggifpage.com/gifs/" + dogList[x]  + ".gif"
+        var img = document.createElement('img'); 
+        img.src = src; 
+        img.style = "max-width: 100%; margin-bottom: 10px; margin: 5px;"
+         earningSection.appendChild(img); }
+    }
 catsEarned = [];
 catsEarnedWout=[];
+babiesEarned =[];
+babiesEarnedWout =[];
+var dogEarned = [];
+var dogEarnedWout = [];
 }
     
 function clicky(offset){
