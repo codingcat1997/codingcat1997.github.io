@@ -17,7 +17,6 @@ const assets = [
   'https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js',
   'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css',
   'https://kit.fontawesome.com/64edab8c67.js',
-  'https://www.gstatic.com/charts/loader.js',
   'https://fonts.googleapis.com/css?family=VT323&display=swap'
 ];
 
