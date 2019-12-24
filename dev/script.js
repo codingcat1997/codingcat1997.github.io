@@ -380,11 +380,12 @@ dayTotals2[dayName] += historicalDataWout[x][3]}
 
 displayGifs();
 }
-
+dayTotals2A = dayTotals2
+dayTotalsA = dayTotals
 
 google.load('visualization', '1.0', {'packages':['corechart']});
 google.charts.setOnLoadCallback(function() {
-    drawChart(dayTotals, dayTotals2);
+    drawChart(dayTotalsA, dayTotals2A);
 
 });
     
