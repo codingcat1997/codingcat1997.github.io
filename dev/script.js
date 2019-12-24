@@ -377,11 +377,17 @@ dayTotals2[dayName] += historicalDataWout[x][3]}
 }
 }
 
-drawChart(dayTotals, dayTotals2);
+
 displayGifs();
 }
 
 
+google.load('visualization', '1.0', {'packages':['corechart']});
+google.charts.setOnLoadCallback(function() {
+    drawChart(dayTotals, dayTotals2);
+
+});
+    
 
 function drawChart(dayTotals, dayTotals2) {
 
