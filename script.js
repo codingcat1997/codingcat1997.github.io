@@ -476,7 +476,7 @@ console.log(dogList)
     }
     for (x in dogList){
         if (dogList[x] > 0){
-        src = "http://www.doggifpage.com/gifs/" + dogList[x]  + ".gif"
+        src = "https://www.doggifpage.com/gifs/" + dogList[x]  + ".gif"
         var img = document.createElement('img'); 
         img.src = src; 
         img.style = "max-width: 100%; margin-bottom: 10px; margin: 5px;"
