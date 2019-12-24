@@ -48,7 +48,11 @@ self.addEventListener('activate', evt => {
 
 // fetch event
 self.addEventListener('fetch', evt => {
-  console.log('fetch event', evt.request.url);
+  console.log('fetch event', );
+  if(evt.request.url.includes("script") || evt.request.url.includes("doggifpage")){
+    console.log("yess" + evt.request.url );
+    return fetch(evt.request);
+  }else{
   evt.respondWith(
     caches.match(evt.request).then(cacheRes => {
       return cacheRes || fetch(evt.request).then(fetchRes => {
@@ -58,5 +62,6 @@ self.addEventListener('fetch', evt => {
         })
       });
     })
-  );
+  );}
+
 });
