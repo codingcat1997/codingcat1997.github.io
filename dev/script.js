@@ -1,18 +1,11 @@
-window.addEventListener('load', () => {
-    registerSW();
-  });
-
-  async function registerSW() {
-    if ('serviceWorker' in navigator) {
-      try {
-        await navigator.serviceWorker.register('./sw.js');
-        console.log(`SW registration NOOY failed`);
-
-      } catch (e) {
-        console.log(`SW registration failed`);
-      }
-    }
+if('serviceWorker' in navigator){
+    navigator.serviceWorker.register('/dev/sw.js')
+      .then(reg => console.log('service worker registered', reg))
+      .catch(err => console.log('service worker not registered', err));
   }
+
+
+
 
 var requestButton = document.querySelector(".request-button");
 var showButton = document.querySelector(".show-button");
