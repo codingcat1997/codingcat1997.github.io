@@ -241,6 +241,7 @@ function httpPostData(date, start, end, cookie, cat, duration, dog, baby){
     console.log(cookie)
     console.log(cat)
     console.log(duration)
+    theUrl = "https://script.google.com/macros/s/AKfycbwG4e8t5r6wKcoVjBRQft8ZpwH-zH8Cznh8Ch8qkp-dUtMokgJl/exec"+"?cookie="+cookie+"&type=push&name=Sofie"+ "&start="+start+"&end="+end+"&cat="+cat+"&duration="+ duration+"&date="+date+"&dog="+dog+"&baby="+baby ;
 
     if (woutHere == 1){
          theUrl = "https://script.google.com/macros/s/AKfycbwG4e8t5r6wKcoVjBRQft8ZpwH-zH8Cznh8Ch8qkp-dUtMokgJl/exec"+"?cookie="+cookie+"&type=push&name=Wout"+ "&start="+start+"&end="+end+"&cat="+cat+"&duration="+ duration+"&date="+date+"&dog="+dog+"&baby="+baby ;
