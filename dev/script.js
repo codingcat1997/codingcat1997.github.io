@@ -175,13 +175,50 @@ countDownDate.setMinutes(countDownDate.getMinutes() + minutesStudy);
 x = setInterval(updateClock, 1000);
 lock = true;
 }
+var breaking = false;
+var breakingTime;
+var oldcountDownDate;
+function teaBreak(){
+    if(breaking == true){
+        breaking = false;
+    }else{
+        breaking = true;
+        breakingTime = new Date();
+        oldcountDownDate = new Date(countDownDate.getTime());;
 
+    }
+}
+var distance;
 function updateClock(){
         // Get today's date and time
         var now = new Date().getTime();
         var now2 = new Date();
-        // Find the distance between now and the count down date
-        var distance = countDownDate.getTime() - now;
+        // Check if pausing
+        if (breaking == true){
+            var distanceFromBreak = now2.getHours() - breakingTime.getHours();
+            var distanceFromMinutes = now2.getMinutes() - breakingTime.getMinutes() ;
+            var distanceFromSeconds = now2.getSeconds() - breakingTime.getSeconds() ;
+            if (distanceFromBreak <0){
+                distanceFromBreak = 0;
+            }
+            if (distanceFromMinutes <0){
+                distanceFromMinutes = 0;
+            }
+            if (distanceFromSeconds <0){
+                distanceFromSeconds = 0;
+            }
+
+
+            console.log("breaking  " + distanceFromBreak + " " + distanceFromMinutes +" " +distanceFromSeconds);
+            console.log(oldcountDownDate + " " + countDownDate )
+            countDownDate.setHours(oldcountDownDate.getHours() + distanceFromBreak);
+            countDownDate.setMinutes(oldcountDownDate.getMinutes() + distanceFromMinutes);
+            countDownDate.setSeconds(oldcountDownDate.getSeconds() + distanceFromSeconds);
+        }else{
+                   // Find the distance between now and the count down date
+         distance = countDownDate.getTime() - now;
+        }
+ 
         
         // Time calculations for days, hours, minutes and seconds
       
@@ -558,6 +595,7 @@ function checkForStatus(){
 
 
 }
+
 function updateStatus(newStatus){
 
     if(woutHere == 1){
